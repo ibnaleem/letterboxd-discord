@@ -22,6 +22,7 @@ async def on_ready() -> None:
 @tree.command(description="Fetch Letterboxd Profile")
 @app_commands.describe(username="Found after the / in letterboxd.com")
 async def profile(interaction: Interaction, username: str):
+
     profile_data = user.User(username)
     json_dict = profile_data.jsonify()
 
@@ -33,17 +34,18 @@ async def profile(interaction: Interaction, username: str):
     embed = Embed(description=f"[{username}'s Letterboxd Profile](https://letterboxd.com/{username})", color=random.choice(COLOURS))
     embed.set_thumbnail(url=url)
     embed.set_author(name=username, icon_url=url)
-    embed.add_field(name="Display name", value=json_dict.get("display_name", ""), inline=True)
     embed.add_field(name="ID", value=json_dict.get("id"), inline=True)
+    embed.add_field(name="Display name", value=json_dict.get("display_name", ""), inline=True)
     embed.add_field(name="Bio", value=json_dict.get("bio", ""), inline=True)
-    embed.add_field(name="Location", value=json_dict.get("location", ""), inline=True)
-    embed.add_field(name="Watchlist length", value=json_dict.get("watchlist_length"), inline=True)
-    embed.add_field(name="Films", value=json_dict.get("stats", {}).get("films"), inline=True)  # Using square brackets for nested access
-    embed.add_field(name="Films this year", value=json_dict.get("stats", {}).get("this_year"), inline=True)
-    embed.add_field(name="Lists", value=json_dict.get("stats", {}).get("list"), inline=True)
     embed.add_field(name="Followers", value=json_dict.get("stats", {}).get("followers"), inline=True)
     embed.add_field(name="Following", value=json_dict.get("stats", {}).get("following"), inline=True)
+    embed.add_field(name="Location", value=json_dict.get("location", ""), inline=True)
+    embed.add_field(name="Watchlist length", value=json_dict.get("watchlist_length"), inline=True)
+    embed.add_field(name="Films", value=json_dict.get("stats", {}).get("films"), inline=True)
+    embed.add_field(name="Films this year", value=json_dict.get("stats", {}).get("this_year"), inline=True)
+    embed.add_field(name="Lists", value=json_dict.get("stats", {}).get("list"), inline=True)
 
     await interaction.response.send_message(embed=embed)
+
 
 client.run(LETTERBOXD_DISCORD_TOKEN)
